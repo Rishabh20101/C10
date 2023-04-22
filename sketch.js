@@ -1,97 +1,67 @@
-var b, enemyImage, ballImage, scene, ball, alien1, alien2, alien3, score=0, opscore=0, speed=5
+var path,boy, leftBoundary,rightBoundary;
+var pathImg,boyImg;
+var i;
 
 function preload(){
-  
-  b = loadImage("b.png");
-  enemyImage = loadImage("alien.png");
-  ballImage = loadImage("ball.png");
-  
+  pathImg = loadImage("path.png");
+  boyImg = loadAnimation("Runner-1.png","Runner-2.png");
 }
 
-
-
-function setup() {
-  createCanvas(400, 400);
+function setup(){
   
-  scene = createSprite(200,200);
-  scene.addImage(b)
-  ball = createSprite(200,345,200,345)
-  ball.addImage(ballImage)
-  ball.scale=0.1
-
-  alien1 = createSprite(200,280,10,10)
-  alien2 = createSprite(200,170,10,10)
-  alien3 = createSprite(200,50,10,10)
-  alien1.addImage(enemyImage)
-  alien2.addImage(enemyImage)
-  alien3.addImage(enemyImage)
-
-  alien1.scale=0.3
-  alien2.scale=0.3
-  alien3.scale=0.3
-
-
+  createCanvas(400,400);
   
-   score = 0    
+// Moving background
+path=createSprite(200,200);
+path.addImage(pathImg);
+path.velocityY = 4;
+path.scale=1.2;
+
+//creating boy running
+boy = createSprite(180,340,30,30);
+boy.scale=0.08;
+boy.addAnimation("JakeRunning",boyImg);
+  
+
+leftBoundary=createSprite(0,0,100,800);
+
+// leftBoundary.invisible = false;
+// leftBoundary.visible = true;
+// leftBoundary.invisible = true;
+ leftBoundary.visible = false;
+
+
+rightBoundary=createSprite(410,0,100,800);
+rightBoundary.visible = false;
 }
 
 function draw() {
- background(0);
- createEdgeSprites()
-
- alien1.x=alien1.x+speed
- alien2.x=alien2.x-speed
- alien3.x=alien3.x+speed
-
- if(alien1.x<0 || alien1.x>width)
- {
-   speed=speed*-1
- }
-
-
-
-if(keyDown(UP_ARROW)){
-  ball.y=ball.y-3
-}
-
-if(keyDown(DOWN_ARROW)){
-  ball.y=ball.y+3
-}
-
-if(keyDown(LEFT_ARROW)){
-  ball.x=ball.x-3
-}
-
-if(keyDown(RIGHT_ARROW)){
-  ball.x=ball.x+3
-}
-
-if(ball.isTouching(alien1)|| ball.isTouching(alien2)|| ball.isTouching(alien3)){
-    ball.x=200
-  ball.y=350
-  opscore = opscore+1
-}
-if(ball.y<0){
-  ball.x=200
-  ball.y=345
-  score=score+1
-}
-
-
-drawSprites();
-textSize(15)
-  fill("Yellow")
-  text("Humans:"+score,328,30);
+  background(0);
+  path.velocityY = 4;
   
-
-textSize(15)
-  fill("Yellow")
-  text("Aliens:"+opscore,5,30);
+  boy.x = World.mouseX;
   
+  edges= createEdgeSprites();
+  boy.collide(edges[3]);
+  boy.collide(leftBoundary);
+  boy.collide(rightBoundary);
+  
+  //code to reset the background
 
-    
+  console.log(path.x)
+  if (path.y>0){
+    path.y=-200
+  }
 
+  /*if(path.y > 400 ){
+   
+  path.y = height/2;
+  }*/
+
+  /*if(path.y > 400 ){
+path.y = height/2;}*/
+
+/*if(path.y > 400 ){path.y = height/2;}*/
+  
+  drawSprites();
 }
-
-
-
